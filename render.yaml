@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: frappe-app
+    plan: free
+    runtime: python
+    repo: https://github.com/tu-usuario/frappe-app-repo.git  # Reemplázalo con tu repositorio Frappe
+    buildCommand: |
+      pip install -r requirements.txt
+      bench init --skip-assets --frappe-branch version-14 frappe-bench
+      cd frappe-bench
+      bench get-app --branch version-14 frappe
+      bench new-site frappe-site --admin-password admin --db-type postgres --db-host $DATABASE_URL
+      bench install-app frappe
+    startCommand: |
+      cd frappe-bench
+      bench start
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: frappe-db
+          property: connectionString
+      - key: REDIS_URL
+        value: redis://redis:6379  # Configuración de Redis
+      - key: SITES
+        value: frappe-site
+
+databases:
+  - name: frappe-db
+    plan: free
+    properties:
+      engine: postgres  # Usamos PostgreSQL
+
+services:
+  - type: redis
+    name: frappe-redis
+    plan: free
