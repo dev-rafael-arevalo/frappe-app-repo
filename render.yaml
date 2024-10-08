@@ -3,7 +3,7 @@ services:
     name: frappe-app
     plan: free
     runtime: python
-    repo: https://github.com/tu-usuario/frappe-app-repo.git  # Cambia esto por tu repo
+    repo: https://github.com/dev-rafael-arevalo/frappe-app-repo.git  # Cambia esto por tu repo
     buildCommand: |
       pip install -r requirements.txt
       bench init --skip-assets --frappe-branch version-14 frappe-bench
@@ -29,8 +29,11 @@ services:
   - type: redis
     name: frappe-redis
     plan: free
+    ipAllowList:
+      - source: web  # Permite el acceso desde el servicio web (frappe-app)
 
 databases:
   - name: frappe-db
     plan: free
-
+    ipAllowList:
+      - source: web  # Permite el acceso desde el servicio web (frappe-app)
