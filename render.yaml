@@ -33,5 +33,4 @@ services:
 databases:
   - name: frappe-db
     plan: free
-    properties:
-      engine: postgres
+
